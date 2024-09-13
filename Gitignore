@@ -1,0 +1,14 @@
+# Ignorar arquivos e diretórios específicos do sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos de configuração do MySQL
+*.sql
+*.sql.gz
+
+# Ignorar arquivos temporários de editor
+*.swp
+*.swo
+
+# Ignorar diretórios de backup
+backup/
