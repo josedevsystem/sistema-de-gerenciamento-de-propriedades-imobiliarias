@@ -1,0 +1,126 @@
+O banco de dados ImobiliariaDB foi projetado para gerenciar informações relacionadas a uma imobiliária. Este sistema de banco de dados permite o gerenciamento eficiente de propriedades, clientes, agentes e transações. A seguir, são descritos os principais componentes do banco de dados e como eles interagem:
+
+CREATE DATABASE ImobiliariaDB;
+
+-- Usar o banco de dados recém-criado
+USE ImobiliariaDB;
+
+-- Tabela de Propriedades
+CREATE TABLE Propriedades (
+    id_propriedade INT AUTO_INCREMENT PRIMARY KEY,
+    endereco VARCHAR(255) NOT NULL,
+    tipo ENUM('casa', 'apartamento', 'terreno') NOT NULL,
+    valor DECIMAL(15, 2) NOT NULL,
+    status ENUM('disponível', 'vendido', 'alugado') NOT NULL
+);
+
+-- Tabela de Clientes
+CREATE TABLE Clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(255),
+    tipo_interesse ENUM('compra', 'aluguel') NOT NULL
+);
+
+-- Tabela de Agentes
+CREATE TABLE Agentes (
+    id_agente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(255)
+);
+
+-- Tabela de Transações
+CREATE TABLE Transacoes (
+    id_transacao INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    id_agente INT,
+    id_propriedade INT,
+    data_transacao DATETIME NOT NULL,
+    tipo_transacao ENUM('compra', 'aluguel') NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente),
+    FOREIGN KEY (id_agente) REFERENCES Agentes(id_agente),
+    FOREIGN KEY (id_propriedade) REFERENCES Propriedades(id_propriedade)
+);
+Inserção de Dados
+Para adicionar dados fictícios ao banco de dados, use o seguinte script SQL:
+
+sql
+Copiar código
+-- Inserir Propriedades
+INSERT INTO Propriedades (endereco, tipo, valor, status) VALUES 
+('Rua das Flores, 123', 'casa', 500000.00, 'disponível'),
+('Avenida Central, 456', 'apartamento', 350000.00, 'disponível'),
+('Loteamento Jardim, 789', 'terreno', 200000.00, 'disponível');
+
+-- Inserir Clientes
+INSERT INTO Clientes (nome, telefone, email, tipo_interesse) VALUES 
+('Ana Costa', '9876-5432', 'ana.costa@email.com', 'compra'),
+('Carlos Lima', '8765-4321', 'carlos.lima@email.com', 'aluguel'),
+('Fernanda Silva', '7654-3210', 'fernanda.silva@email.com', 'compra');
+
+-- Inserir Agentes
+INSERT INTO Agentes (nome, telefone, email) VALUES 
+('João Pereira', '1234-5678', 'joao.pereira@email.com'),
+('Maria Fernandes', '2345-6789', 'maria.fernandes@email.com');
+
+-- Inserir Transações
+INSERT INTO Transacoes (id_cliente, id_agente, id_propriedade, data_transacao, tipo_transacao) VALUES 
+(1, 1, 1, '2024-09-13 10:00:00', 'compra'),
+(2, 2, 2, '2024-09-13 14:00:00', 'aluguel');
+Consultas SQL
+Listar Propriedades Disponíveis
+sql
+Copiar código
+SELECT * FROM Propriedades
+WHERE status = 'disponível';
+Listar Transações de Compra
+sql
+Copiar código
+SELECT * FROM Transacoes
+WHERE tipo_transacao = 'compra';
+Detalhes Completos de uma Transação
+sql
+Copiar código
+SELECT t.id_transacao, c.nome AS cliente_nome, a.nome AS agente_nome, p.endereco AS propriedade_endereco, t.data_transacao, t.tipo_transacao
+FROM Transacoes t
+JOIN Clientes c ON t.id_cliente = c.id_cliente
+JOIN Agentes a ON t.id_agente = a.id_agente
+JOIN Propriedades p ON t.id_propriedade = p.id_propriedade;
+Atualização de Dados
+Alterar Status de uma Propriedade para "Vendido"
+sql
+Copiar código
+UPDATE Propriedades
+SET status = 'vendido'
+WHERE id_propriedade = 1;
+Atualizar Número de Telefone de um Cliente
+sql
+Copiar código
+UPDATE Clientes
+SET telefone = '9999-8888'
+WHERE id_cliente = 1;
+Exclusão de Dados
+Remover um Cliente
+sql
+Copiar código
+DELETE FROM Clientes
+WHERE id_cliente = 3;
+Excluir uma Propriedade
+sql
+Copiar código
+DELETE FROM Propriedades
+WHERE id_propriedade = 3;
+Relacionamento de Tabelas
+Lista de Transações com Detalhes
+sql
+Copiar código
+SELECT t.id_transacao, c.nome AS cliente_nome, a.nome AS agente_nome, p.endereco AS propriedade_endereco, t.data_transacao, t.tipo_transacao
+FROM Transacoes t
+JOIN Clientes c ON t.id_cliente = c.id_cliente
+JOIN Agentes a ON t.id_agente = a.id_agente
+JOIN Propriedades p ON t.id_propriedade = p.id_propriedade;
+Licença
+Este projeto está licenciado sob a MIT License.
+
